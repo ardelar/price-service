@@ -4,7 +4,7 @@ import com.example.priceservice.application.dto.PriceResponse;
 import com.example.priceservice.domain.model.Price;
 import com.example.priceservice.domain.ports.PriceRepositoryPort;
 import com.example.priceservice.domain.ports.PriceServicePort;
-//import com.example.priceservice.infrastructure.adapter.rest.exception.PriceNotFoundException;
+import com.example.priceservice.infrastructure.adapter.rest.exception.PriceNotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -22,8 +22,7 @@ public class PriceService implements PriceServicePort {
     public PriceResponse getApplicablePrice(Long brandId, Long productId, LocalDateTime date) {
         List<Price> prices = priceRepository.findApplicablePrices(brandId, productId, date);
         if (prices.isEmpty()) {
-        	//TODO: Uncomment when PriceNotFoundException.java class is developed
-//            throw new PriceNotFoundException("No price found for brand " + brandId + ", product " + productId + " at " + date);
+        	throw new PriceNotFoundException("No price found for brand " + brandId + ", product " + productId + " at " + date);
         }
 
         Price applicablePrice = prices.stream()
