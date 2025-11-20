@@ -1,6 +1,5 @@
 package com.example.priceservice.infrastructure.adapter.rest.controller;
 
-import com.example.priceservice.application.dto.PriceResponse;
 import com.example.priceservice.domain.ports.PriceServicePort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -22,11 +21,14 @@ public class PriceController {
     }
 
     @GetMapping
-    public ResponseEntity<PriceResponse> getPrice(
-            @RequestParam Long brandId,
+    public ResponseEntity<?> getApplicablePrice(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date,
             @RequestParam Long productId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime date) {
-        PriceResponse response = priceService.getApplicablePrice(brandId, productId, date);
-        return ResponseEntity.ok(response);
+            @RequestParam Long brandId) {
+
+        return priceService.findApplicablePrice(brandId, productId, date)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
 }

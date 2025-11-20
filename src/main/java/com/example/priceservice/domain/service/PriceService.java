@@ -1,41 +1,37 @@
 package com.example.priceservice.domain.service;
 
 import com.example.priceservice.application.dto.PriceResponse;
-import com.example.priceservice.domain.model.Price;
-import com.example.priceservice.domain.ports.PriceRepositoryPort;
 import com.example.priceservice.domain.ports.PriceServicePort;
-import com.example.priceservice.infrastructure.adapter.rest.exception.PriceNotFoundException;
+import com.example.priceservice.infrastructure.adapter.persistence.entity.PriceEntity;
+import com.example.priceservice.infrastructure.adapter.persistence.repository.PriceJpaRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.Comparator;
-import java.util.List;
+import java.util.Optional;
 
+@Service
 public class PriceService implements PriceServicePort {
 
-    private final PriceRepositoryPort priceRepository;
+    private final PriceJpaRepository priceRepository;
 
-    public PriceService(PriceRepositoryPort priceRepository) {
+    public PriceService(PriceJpaRepository priceRepository) {
         this.priceRepository = priceRepository;
     }
 
-    @Override
-    public PriceResponse getApplicablePrice(Long brandId, Long productId, LocalDateTime date) {
-        List<Price> prices = priceRepository.findApplicablePrices(brandId, productId, date);
-        if (prices.isEmpty()) {
-        	throw new PriceNotFoundException("No price found for brand " + brandId + ", product " + productId + " at " + date);
-        }
-
-        Price applicablePrice = prices.stream()
-                .max(Comparator.comparing(Price::priority))
-                .orElseThrow(); // Should never happen due to prior check
-
-        return new PriceResponse(
-                applicablePrice.productId(),
-                applicablePrice.brandId(),
-                applicablePrice.priceList(),
-                applicablePrice.startDate(),
-                applicablePrice.endDate(),
-                applicablePrice.amount()
-        );
+    public Optional<PriceResponse> findApplicablePrice(Long brandId, Long productId, LocalDateTime applicationDate) {
+        return priceRepository.findApplicablePrice(brandId, productId, applicationDate)
+                .map(this::convertToResponse);
     }
+
+    private PriceResponse convertToResponse(PriceEntity priceEntity) {
+        return PriceResponse.builder()
+                .productId(priceEntity.getProductId())
+                .brandId(priceEntity.getBrandId())
+                .priceList(priceEntity.getPriceList())
+                .startDate(priceEntity.getStartDate())
+                .endDate(priceEntity.getEndDate())
+                .price(priceEntity.getPrice())
+                .build();
+    }
+
 }
