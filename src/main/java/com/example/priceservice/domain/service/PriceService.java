@@ -31,6 +31,7 @@ public class PriceService implements PriceServicePort {
                 .startDate(priceEntity.getStartDate())
                 .endDate(priceEntity.getEndDate())
                 .price(priceEntity.getPrice())
+                .priority(priceEntity.getPriority())
                 .build();
     }
 

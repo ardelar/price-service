@@ -15,5 +15,6 @@ public class PriceResponse {
         LocalDateTime startDate;
         LocalDateTime endDate;
         BigDecimal price;
+        Integer priority;
 
 }
