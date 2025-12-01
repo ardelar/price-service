@@ -8,7 +8,12 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "prices")
+@Table(name = "prices", indexes = {
+        @Index(name = "idx_price_search",
+                columnList = "BRAND_ID, PRODUCT_ID, START_DATE, END_DATE"),
+        @Index(name = "idx_price_priority",
+                columnList = "PRIORITY DESC")
+})
 @Data
 @NoArgsConstructor
 public class PriceEntity {

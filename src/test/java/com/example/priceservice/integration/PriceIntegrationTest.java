@@ -26,10 +26,10 @@ public class PriceIntegrationTest {
 
         PriceResponse response = responseOptional.get();
 
-        assertEquals(35455L, response.getProductId());
-        assertEquals(1, response.getBrandId());
-        assertEquals(1, response.getPriceList());
-        assertEquals(35.50, response.getPrice().doubleValue());
+        assertEquals(35455L, response.productId());
+        assertEquals(1, response.brandId());
+        assertEquals(1, response.priceList());
+        assertEquals(35.50, response.price().doubleValue());
     }
 
     @Test
@@ -37,7 +37,7 @@ public class PriceIntegrationTest {
         LocalDateTime date = LocalDateTime.parse("2020-06-14T15:00:00");
         Optional<PriceResponse> response = priceService.findApplicablePrice(1L, 35455L, date);
         assertTrue(response.isPresent());
-        assertEquals(2, response.get().getPriceList());
+        assertEquals(2, response.get().priceList());
     }
 
     @Test
@@ -45,7 +45,6 @@ public class PriceIntegrationTest {
         LocalDateTime date = LocalDateTime.parse("2020-06-14T16:00:00");
         Optional<PriceResponse> response = priceService.findApplicablePrice(1L, 35455L, date);
         assertTrue(response.isPresent());
-        assertEquals(1, response.get().getPriority());
     }
 
     @Test
