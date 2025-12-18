@@ -9,3 +9,7 @@ CREATE TABLE PRICES (
     PRICE DECIMAL(10, 2) NOT NULL,
     CURRENCY VARCHAR(3) NOT NULL
 );
+
+CREATE INDEX idx_price_search ON PRICES (brand_id, product_id, start_date, end_date);
+CREATE INDEX idx_price_priority ON PRICES (priority);
+CREATE INDEX idx_price_dates ON PRICES (start_date, end_date);
