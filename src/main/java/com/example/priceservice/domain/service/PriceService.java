@@ -24,14 +24,13 @@ public class PriceService implements PriceServicePort {
     }
 
     private PriceResponse convertToResponse(PriceEntity priceEntity) {
-        return PriceResponse.builder()
-                .productId(priceEntity.getProductId())
-                .brandId(priceEntity.getBrandId())
-                .priceList(priceEntity.getPriceList())
-                .startDate(priceEntity.getStartDate())
-                .endDate(priceEntity.getEndDate())
-                .price(priceEntity.getPrice())
-                .build();
+        return new PriceResponse(
+                priceEntity.getProductId(),
+                priceEntity.getBrandId(),
+                priceEntity.getPriceList(),
+                priceEntity.getStartDate(),
+                priceEntity.getEndDate(),
+                priceEntity.getPrice());
     }
 
 }
